@@ -3,7 +3,7 @@ HOST: http://open-falcon.com/api/v1/
 
 # Open-Falcon API Documentation
 
-The Open-Falcon API is based on REST principles, all you need to use it is your Open-Falcon account. You must be authenticated and call HTTPs requests on the URLs listed below. 
+The Open-Falcon API is based on REST principles, all you need to use it is your Open-Falcon account. You must be authenticated and call HTTPs requests on the URLs listed below.
 This documentation covers the core resources you can used to manipulate objects on Open-Falcon. Review the information basic instructions if you are new to APIs.
 
 >**Note:** We strongly discourage Open-Falcon customers from using the apiary Traffic Inspector. Any information you submit through Traffic Inspector is routed through a 3rd party, and is unsecured. If you choose to use Traffic Inspector against our recommendation, use your Open-Falcon TESTING credentials for API calls. _Never_ use your production credentials.
@@ -29,7 +29,7 @@ Welcome to the Open-Falcon API reference! The Open-Falcon API is based on REST. 
 - 403 `Forbidden` - Access denied.
 - 404 `Not Found` - Resource was not found.
 - 405 `Method Not Allowed` - Requested method is not supported for the specified resource.
-- 429 `Too Many Requests` - Exceeded Open-Falcon API limits. Pause requests, wait one minute, and try again. 
+- 429 `Too Many Requests` - Exceeded Open-Falcon API limits. Pause requests, wait one minute, and try again.
 - 503 `Service Unavailable` - The service is temporary unavailable (e.g. scheduled Platform Maintenance). Try again later.
 
 # Use Cases
@@ -42,7 +42,7 @@ For an alearting rule, you should have 1) an Template for strategies, 2) an User
 4. [Bind Template to HostGroup](#usecase-1-6).
 
 ## Get Data for Your Customized Graph
-You could also use other chart library (e.g., jsflot, D3.js, highcharts) to draw your own graphs. 
+You could also use other chart library (e.g., jsflot, D3.js, highcharts) to draw your own graphs.
 ### Steps
 1. [Get the endpoint](#usecase-2-1).
 2. [Get the counter of endpoints step 2](#usecase-2-2).
@@ -61,6 +61,7 @@ If you have ideas about how we can improve this documentation (or want to tell u
 
 ```
         Agent (Port 1988)
+            /config/reload
             /ips
             /page/cpu/usage
             /page/df
@@ -161,7 +162,7 @@ If you have ideas about how we can improve this documentation (or want to tell u
         Heartbeat Server (Port 6031)
             /expressions cache.ExpressionCache.Get()
             /plugins/ cache.GetPlugins()
-        
+
         Judge (Port 6081)
             /count
             /expression/
@@ -275,6 +276,68 @@ If you have ideas about how we can improve this documentation (or want to tell u
 
 # Group Agent
 
+## Reload Configuration [/config/reload]
+
+### Get the Reloading Result [GET]
+
++ Response 200 (application/json)
+    + Body
+    {
+       "msg":"success",
+       "data":{
+          "debug":false,
+          "hostname":"test-agent",
+          "ip":"",
+          "plugin":{
+             "enabled":false,
+             "dir":"./plugin",
+             "git":"https://coding.net/ulricqin/plugin.git",
+             "logs":"./logs"
+          },
+          "heartbeat":{
+             "enabled":true,
+             "addr":"172.17.0.3:6030",
+             "interval":60,
+             "timeout":1000
+          },
+          "transfer":{
+             "enabled":true,
+             "addrs":null,
+             "interval":60,
+             "timeout":1000
+          },
+          "http":{
+             "enabled":true,
+             "listen":":1988",
+             "backdoor":false
+          },
+          "collector":{
+             "ifacePrefix":[
+                "eth",
+                "em"
+             ]
+          },
+          "ignore":{
+             "cpu.busy":true,
+             "df.bytes.free":true,
+             "df.bytes.total":true,
+             "df.bytes.used":true,
+             "df.bytes.used.percent":true,
+             "df.inodes.free":true,
+             "df.inodes.total":true,
+             "df.inodes.used":true,
+             "df.inodes.used.percent":true,
+             "mem.memfree":true,
+             "mem.memtotal":true,
+             "mem.memused":true,
+             "mem.memused.percent":true,
+             "mem.swapfree":true,
+             "mem.swaptotal":true,
+             "mem.swapused":true
+          }
+       }
+    }
+
 ## IPs [/ips]
 
 ### Get List of Trustable IPs [GET]
@@ -360,7 +423,7 @@ Get file system disk space usage.
 ### Get Disk IO Info [GET]
 
 + Response 200 (application/json)
-    
+
         {
             "msg": "success",
             "data": [
@@ -395,7 +458,7 @@ Format of returned data (MB):
 ```
 
 + Response 200 (application/json)
- 
+
         {
             "msg": "success",
             "data": [
@@ -410,7 +473,7 @@ Format of returned data (MB):
 ### Get System Loadavg of 1, 5, and 15 min [GET]
 
 + Response 200 (application/json)
-  
+
         {
             "msg": "success",
             "data": [
@@ -677,15 +740,15 @@ Returned `ok` if the component works as usual.
     + Body    ok
 
 ## /version
-### GET
-Get the version number of the component.
+### Get the version number of the component [GET]
+
 + Response 200 (application/json)
-  
+
         2.0.2
 
 ## /workdir
-### GET
-Get the work directory of the component.
+### Get the work directory of the component [GET]
+
 + Response 200 (application/json)
 
         /home/alarm
@@ -726,7 +789,7 @@ Example:
 
 ### View a List of Counters [POST]
 
-Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[endpoints]=["host1"]&data[q]=cpu&data[limit]=30`. 
+Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[endpoints]=["host1"]&data[q]=cpu&data[limit]=30`.
 
 + Request (application/x-www-form-urlencoded)
 
@@ -769,7 +832,7 @@ Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[endpoints]=["
 
 ### Create a Tmpgraph by Given Endpoints and Counters [POST]
 
-Do not forget to escape `[` with `%5B` and `]` with `%5D` in 
+Do not forget to escape `[` with `%5B` and `]` with `%5D` in
 `data[endpoints[]]=host1&data[counters[]]=cpu.idle&data[graph_type]=h`.
 
 + Request (application/x-www-form-urlencoded)
@@ -924,7 +987,7 @@ return render_template("chart/multi_ng.html", **locals())
 ```
 
 + Response 200 (text/html)
- 
+
 ## /graph/<int:gid>/edit
 ## /graph/<int:gid>/delete
 ## /graph/multi_edit
@@ -1256,7 +1319,7 @@ Create initial root user.
 ### Logout [GET]
 
 Logout a session by value of "sig" cookie.
-    
+
 + Response 200 (application/json)
 
         {
@@ -1297,7 +1360,7 @@ Get user info by value of "sig" cookie.
                 "role": 2
             }
         }
-    
+
 ## Team All [/team/all]
 
 ### Show Full List of Teams [GET]
@@ -1908,7 +1971,7 @@ id = "s_2_f0b61e6805e88bd507c6a48ebe43aea6"
           "method": "PUT",
           "status": "success"
         }
-        
+
 # Group Graph
 
 ## API Recv [/api/recv/{endpoint}/{metric}/{ts}/{step}/{dstype}/{value}]
@@ -2213,7 +2276,7 @@ Same with "Counter All". This API will be deprecated.
 
 ### Version 2 of Receiving Data and Adding a Graph Item [POST]
 
-Do not forget to escape `[` with `%5B` and `]` with `%5D` in 
+Do not forget to escape `[` with `%5B` and `]` with `%5D` in
 `data[e]=host1&data[m]=cpu.user&data[v]=0.55555&data[ts]=1456286192&data[step]=60&data[type]=GAUGE`
 
 + Request (application/x-www-form-urlencoded)
@@ -2231,7 +2294,7 @@ Do not forget to escape `[` with `%5B` and `]` with `%5D` in
 
 ### Version 2 of History [POST]
 
-Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[e]=host1&data[m]=cpu.user`. 
+Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[e]=host1&data[m]=cpu.user`.
 
 + Request (application/x-www-form-urlencoded)
 
@@ -2359,22 +2422,630 @@ Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[e]=host1&data
         }
 
 # Group HBS
-## /config/reload
-### GET
+
+## /nqm-agents
+
+### Retreive all nqm-agents [GET]
+
++ Response 200 (application/json)
+    + Body
+    {
+        "msg": "success",
+        "data": [
+            {
+                "ag_id": 1,
+                "ag_name": "电信_河南",
+                "ag_connection_id": "ctl-ha-001-002-003-004@1.2.3.4"
+                "ag_hostname": "ctl-ha-001-002-003-004",
+                "ag_ip_address": "1.2.3.4",
+                "ag_isp_id": 2,
+                "ag_ct_id": -1,
+                "ag_pv_id": 4,
+                "ag_status": 1,
+                "ag_last_heartbeat": 1456292640
+            },
+            {
+                "ag_id": 2,
+                "ag_name": "电信_湖北",
+                "ag_connection_id": "ctl-hb-002-003-004-005@2.3.4.5"
+                "ag_hostname": "cctl-hb-002-003-004-005",
+                "ag_ip_address": "2.3.4.5",
+                "ag_isp_id": 2,
+                "ag_ct_id": -1,
+                "ag_pv_id": 5,
+                "ag_status": 1,
+                "ag_last_heartbeat": 1456292640
+            },
+            {
+                "ag_id": 3,
+                "ag_name": "联通_福建",
+                "ag_connection_id": "cnc-fj-003-004-005-006@3.4.5.6"
+                "ag_hostname": "cnc-fj-003-004-005-006",
+                "ag_ip_address": "3.4.5.6",
+                "ag_isp_id": 3,
+                "ag_ct_id": -1,
+                "ag_pv_id": 6,
+                "ag_status": 0,
+                "ag_last_heartbeat": 1456292640
+            }
+        ]
+    }
+
+## /nqm-targets
+### Add a nqm-target [POST]
++ Request (application/json)
+  + Body
+  {
+    "tg_name": "网通_内蒙古_8"
+    "tg_host": "11.22.33.44"
+    "tg_isp_id": "4"
+    "tg_pv_id": "5"
+    "tg_ct_id": "-1"
+    "tg_name_tag": "网通_内蒙古"
+    "tg_probed_by_all": "1"
+    "tg_class_id": "6"
+  }
+
++ Response 200 (application/json)
+  + Body
+  {
+    "tg_id": 1,
+    "tg_name": "网通_内蒙古_8",
+    "tg_host": "11.22.33.44",
+    "tg_isp_id": "4",
+    "tg_pv_id": "5",
+    "tg_ct_id": "-1",
+    "tg_name_tag": "网通_内蒙古",
+    "tg_probed_by_all": "1",
+    "tg_class_id": "6",
+    "tg_available": 0,
+    "tg_last_result": 0,
+    "tg_status": 0,
+    "tg_last_probed_ts": 0,
+    "tg_created_ts": 1455787560
+  }
+
+## /nqm-targets/{id}
+
+### Delete a nqm-target [DELETE]
++ Response 200 (application/json)
+  + Body
+  {
+    "tg_id": 1,
+    "tg_name": "网通_内蒙古_8",
+    "tg_host": "11.22.33.44",
+    "tg_isp_id": "4",
+    "tg_pv_id": "5",
+    "tg_ct_id": "-1",
+    "tg_name_tag": "网通_内蒙古",
+    "tg_probed_by_all": "1",
+    "tg_class_id": "6",
+    "tg_available": 0,
+    "tg_last_result": 0,
+    "tg_status": 0,
+    "tg_last_probed_ts": 0,
+    "tg_created_ts": 1455787560
+  }
+
+### Update a nqm-target [PUT]
++ Response 200 (application/json)
+  + Body
+  {
+    "tg_id": 1,
+    "tg_name": "网通_内蒙古_8",
+    "tg_host": "11.22.33.44",
+    "tg_isp_id": "4",
+    "tg_pv_id": "5",
+    "tg_ct_id": "-1",
+    "tg_name_tag": "网通_内蒙古",
+    "tg_probed_by_all": "1",
+    "tg_class_id": "6",
+    "tg_available": 0,
+    "tg_last_result": 0,
+    "tg_status": 0,
+    "tg_last_probed_ts": 0,
+    "tg_created_ts": 1455787560
+  }
+
+## nqm targets [/nqm-targets?isp={isp}&province={province}&city={city}]
+
++ Parameters
+
+    + isp (number, optional) - ISP ID of the target
+    + province (number, optional) - Province ID of the target
+    + city (number, optional) - City ID of the target
+
+### Retreive nqm-target [GET]
+
++ Response 200 (application/json)
+  + Body
+  {
+    "tg_id": 1,
+    "tg_name": "网通_内蒙古_8",
+    "tg_host": "11.22.33.44",
+    "tg_isp_id": "4",
+    "tg_pv_id": "5",
+    "tg_ct_id": "-1",
+    "tg_name_tag": "网通_内蒙古",
+    "tg_probed_by_all": "1",
+    "tg_class_id": "6",
+    "tg_available": 0,
+    "tg_last_result": 0,
+    "tg_status": 0,
+    "tg_last_probed_ts": 0,
+    "tg_created_ts": 1455787560
+  }
+
+  
+  ## Task [/nqm-agents/task/{ag_id}]
+
+  ### Add a task for a nqm-agent [POST]
+  + Request (application/json)
+    + Body
+    {  
+       "pt_period":1,
+       "filter":{  
+          "isp":[  
+             {  
+                "tfisp_isp_id":9
+             },
+             {  
+                "tfisp_isp_id":10
+             }
+          ],
+          "province":[  
+             {  
+                "tfpv_pv_id":11
+             },
+             {  
+                "tfpv_pv_id":12
+             }
+          ],
+          "city":[  
+             {  
+                "tfct_ct_id":13
+             }
+          ]
+       }
+    }
+
+  + Response 200 (application/json)
+    + Body
+    {  
+       "pt_ag_id":8,
+       "pt_period":1,
+       "filter":{  
+          "isp":[  
+             {  
+                "tfisp_isp_id":9
+             },
+             {  
+                "tfisp_isp_id":10
+             }
+          ],
+          "province":[  
+             {  
+                "tfpv_pv_id":11
+             },
+             {  
+                "tfpv_pv_id":12
+             }
+          ],
+          "city":[  
+             {  
+                "tfct_ct_id":13
+             }
+          ]
+       }
+    }
+
+  ### Delete a task for a nqm-agent [DELETE]
+  + Response 200 (application/json)
+    + Body
+    {  
+       "pt_ag_id":8,
+       "pt_period":1,
+       "filter":{  
+          "isp":[  
+             {  
+                "tfisp_isp_id":9
+             },
+             {  
+                "tfisp_isp_id":10
+             }
+          ],
+          "province":[  
+             {  
+                "tfpv_pv_id":11
+             },
+             {  
+                "tfpv_pv_id":12
+             }
+          ],
+          "city":[  
+             {  
+                "tfct_ct_id":13
+             }
+          ]
+       }
+    }
+
+  ### Update a task for a nqm-agent [PUT]
+  + Request (application/json)
+    + Body
+    {
+       "pt_period":1,
+       "filter":{  
+          "isp":[  
+             {  
+                "tfisp_isp_id":9
+             },
+             {  
+                "tfisp_isp_id":10
+             }
+          ],
+          "province":[  
+             {  
+                "tfpv_pv_id":11
+             },
+             {  
+                "tfpv_pv_id":12
+             }
+          ],
+          "city":[  
+             {  
+                "tfct_ct_id":13
+             }
+          ]
+       }
+    }
+
+  + Response 200 (application/json)
+    + Body
+    {  
+       "pt_ag_id":8,
+       "pt_period":1,
+       "filter":{  
+          "isp":[  
+             {  
+                "tfisp_isp_id":9
+             },
+             {  
+                "tfisp_isp_id":10
+             }
+          ],
+          "province":[  
+             {  
+                "tfpv_pv_id":11
+             },
+             {  
+                "tfpv_pv_id":12
+             }
+          ],
+          "city":[  
+             {  
+                "tfct_ct_id":13
+             }
+          ]
+       }
+    }
+
+  ## Retreive Tasks [/nqm-agents/tasks]
+
+  ### Retreive tasks of all nqm-agents [GET]
+  + Response 200 (application/json)
+    + Body
+    {  
+       "msg":"success",
+       "data":[  
+          {  
+             "pt_ag_id":8,
+             "pt_period":1,
+             "filter":{  
+                "isp":[  
+                   {  
+                      "tfisp_isp_id":9
+                   },
+                   {  
+                      "tfisp_isp_id":10
+                   }
+                ],
+                "province":[  
+                   {  
+                      "tfpv_pv_id":11
+                   },
+                   {  
+                      "tfpv_pv_id":12
+                   }
+                ],
+                "city":[  
+                   {  
+                      "tfct_ct_id":13
+                   }
+                ]
+             }
+          },
+          {  
+             "pt_ag_id":9,
+             "pt_period":1,
+             "filter":null
+          },
+          {  
+             "pt_ag_id":10,
+             "pt_period":2,
+             "filter":{  
+                "isp":[  
+                   {  
+                      "tfisp_isp_id":11
+                   },
+                   {  
+                      "tfisp_isp_id":12
+                   }
+                ],
+                "province":[  
+                   {  
+                      "tfpv_pv_id":13
+                   }
+                ]
+             }
+          }
+       ]
+    }
+
+## Task [/nqm-agents/task/{ag_id}]
+
+### Add a task for a nqm-agent [POST]
++ Request (application/json)
+  + Body
+  {  
+     "pt_period":1,
+     "filter":{  
+        "isp":[  
+           {  
+              "tfisp_isp_id":9
+           },
+           {  
+              "tfisp_isp_id":10
+           }
+        ],
+        "province":[  
+           {  
+              "tfpv_pv_id":11
+           },
+           {  
+              "tfpv_pv_id":12
+           }
+        ],
+        "city":[  
+           {  
+              "tfct_ct_id":13
+           }
+        ]
+     }
+  }
+
++ Response 200 (application/json)
+  + Body
+  {  
+     "pt_ag_id":8,
+     "pt_period":1,
+     "filter":{  
+        "isp":[  
+           {  
+              "tfisp_isp_id":9
+           },
+           {  
+              "tfisp_isp_id":10
+           }
+        ],
+        "province":[  
+           {  
+              "tfpv_pv_id":11
+           },
+           {  
+              "tfpv_pv_id":12
+           }
+        ],
+        "city":[  
+           {  
+              "tfct_ct_id":13
+           }
+        ]
+     }
+  }
+
+### Delete a task for a nqm-agent [DELETE]
++ Response 200 (application/json)
+  + Body
+  {  
+     "pt_ag_id":8,
+     "pt_period":1,
+     "filter":{  
+        "isp":[  
+           {  
+              "tfisp_isp_id":9
+           },
+           {  
+              "tfisp_isp_id":10
+           }
+        ],
+        "province":[  
+           {  
+              "tfpv_pv_id":11
+           },
+           {  
+              "tfpv_pv_id":12
+           }
+        ],
+        "city":[  
+           {  
+              "tfct_ct_id":13
+           }
+        ]
+     }
+  }
+
+### Update a task for a nqm-agent [PUT]
++ Request (application/json)
+  + Body
+  {
+     "pt_period":1,
+     "filter":{  
+        "isp":[  
+           {  
+              "tfisp_isp_id":9
+           },
+           {  
+              "tfisp_isp_id":10
+           }
+        ],
+        "province":[  
+           {  
+              "tfpv_pv_id":11
+           },
+           {  
+              "tfpv_pv_id":12
+           }
+        ],
+        "city":[  
+           {  
+              "tfct_ct_id":13
+           }
+        ]
+     }
+  }
+
++ Response 200 (application/json)
+  + Body
+  {  
+     "pt_ag_id":8,
+     "pt_period":1,
+     "filter":{  
+        "isp":[  
+           {  
+              "tfisp_isp_id":9
+           },
+           {  
+              "tfisp_isp_id":10
+           }
+        ],
+        "province":[  
+           {  
+              "tfpv_pv_id":11
+           },
+           {  
+              "tfpv_pv_id":12
+           }
+        ],
+        "city":[  
+           {  
+              "tfct_ct_id":13
+           }
+        ]
+     }
+  }
+
+## Retreive Tasks [/nqm-agents/tasks]
+
+### Retreive tasks of all nqm-agents [GET]
++ Response 200 (application/json)
+  + Body
+  {  
+     "msg":"success",
+     "data":[  
+        {  
+           "pt_ag_id":8,
+           "pt_period":1,
+           "filter":{  
+              "isp":[  
+                 {  
+                    "tfisp_isp_id":9
+                 },
+                 {  
+                    "tfisp_isp_id":10
+                 }
+              ],
+              "province":[  
+                 {  
+                    "tfpv_pv_id":11
+                 },
+                 {  
+                    "tfpv_pv_id":12
+                 }
+              ],
+              "city":[  
+                 {  
+                    "tfct_ct_id":13
+                 }
+              ]
+           }
+        },
+        {  
+           "pt_ag_id":9,
+           "pt_period":1,
+           "filter":null
+        },
+        {  
+           "pt_ag_id":10,
+           "pt_period":2,
+           "filter":{  
+              "isp":[  
+                 {  
+                    "tfisp_isp_id":11
+                 },
+                 {  
+                    "tfisp_isp_id":12
+                 }
+              ],
+              "province":[  
+                 {  
+                    "tfpv_pv_id":13
+                 }
+              ]
+           }
+        }
+     ]
+  }
+
+
+
+## Reload Configuration [/config/reload]
+
+### Get the Reloading Result [GET]
+
 Only works if IP is "127.0.0.1", otherwise returns "no privilege".
 
-## /expressions
-### GET；POST
 + Response 200 (application/json)
-    + Body    
+    + Body
+    {
+       "msg":"success",
+       "data":{
+          "debug":false,
+          "hosts":"",
+          "database":"root:password@tcp(172.17.0.3:3306)/falcon_portal?loc=Local\u0026parseTime=true",
+          "maxIdle":100,
+          "listen":":6030",
+          "trustable":[
+             ""
+          ],
+          "http":{
+             "enabled":true,
+             "listen":"0.0.0.0:6031"
+          }
+       }
+    }
+
+## /expressions
+### GET [GET]
++ Response 200 (application/json)
+    + Body
         {
             "msg": "success",
             "data": null
         }
 
 ## /gdc/ping
-### GET
-Checks Platform availability.
+### Checks Platform availability [GET]
 
 + Request
 
@@ -2387,18 +3058,18 @@ Checks Platform availability.
 
 + Response 503
 
-    + Body 
-    
-            Scheduled maintenance in progress. Please try again later.  
-    
+    + Body
+
+            Scheduled maintenance in progress. Please try again later.
+
 + Response 503
 
     + Headers
-    
+
             Content-Type: application/json
-        
-    + Body 
-    
+
+    + Body
+
             {"error":{
                 "message": "Internal server error. Please fill in bug report with request_id='{error-id}'"
             }}
@@ -2408,17 +3079,17 @@ Checks Platform availability.
 Returned `ok` if the component works as usual.
 
 ## /version
-### GET；POST
-Get the version number of the component.
+### Get the version number of the component [GET]
+
 + Response 200 (text/plain)
-    + Body    
+    + Body
         1.1.0
 
 ## /workdir
-### GET；POST
-Get the work directory of the component.
+### Get the work directory of the component [GET]
+
 + Response 200 (application/json)
-    + Body    
+    + Body
         {
             "msg": "success",
             "data": "/home/hbs"
@@ -2426,58 +3097,58 @@ Get the work directory of the component.
 
 # Group Judge
 ## /config/reload
-###GET；POST。
+###GET [GET]
 Only works if IP is "127.0.0.1", otherwise returns "no privilege".
 
 ## /count
-### GET；POST
+### GET [GET]
 + Response 200 (text/plain)
-    + Body    
+    + Body
         total: 179
 
 ## /expression/
-### GET；POST
+### GET [GET]
 + Response 200 (application/json)
-    + Body    
+    + Body
         {
             "msg": "success",
             "data": null
         }
 
 ## /health
-### GET；POST
+### GET [GET]
 Returned `ok` if the component works as usual.
 + Response 200 (text/plain)
-    + Body    
+    + Body
         ok
 
 ## /history/
-### GET；POST
+### GET [GET]
 + Response 200 (text/plain)
-    + Body    
-        not found 
+    + Body
+        not found
 
 ## /strategy/
-### GET；POST
+### GET [GET]
 + Response 200 (application/json)
-    + Body    
+    + Body
         {
             "msg": "success",
             "data": null
         }
 
 ## /version
-### GET；POST
-Get the version number of the component.
+### Get the version number of the component [GET]
+
 + Response 200 (text/plain)
-    + Body    
+    + Body
         2.0.2
 
 ## /workdir
-### GET；POST
-Get the work directory of the component.
+### Get the work directory of the component [GET]
+
 + Response 200 (application/json)
-    + Body    
+    + Body
         {
             "msg": "success",
             "data": "/home/judge"
@@ -2494,8 +3165,7 @@ Returned `ok` if the component works as usual.
         ok
 
 ## /api/version
-### GET
-Get the version number of the component.
+### Get the version number of the component [GET]
 
 + Response 200 (application/json)
 
@@ -2744,7 +3414,7 @@ return render_template(
         host1
         host2
         host3
-        
+
 ## Group Plugins [/group/{group_id}/plugins]
 
 + Parameters
@@ -2754,7 +3424,7 @@ return render_template(
 ### Group Hosts [GET]
 
 ```
-return render_template('plugin/list.html', group=group, plugins=plugins, 
+return render_template('plugin/list.html', group=group, plugins=plugins,
                        uic_address=UIC_ADDRESS['external'], config=config)
 ```
 
@@ -2776,7 +3446,7 @@ return render_template('group/advanced.html', config=config)
 
     + group_id: `1` (number) - ID of the group to bind.
     + template_id: `3` (number) - ID of the template to bind.
-    
+
 ### Bind a Group to a Template [GET]
 
 + Response 200 (application/json)
@@ -2842,7 +3512,7 @@ Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[old_str]=old_
 ### Render a HTML Page to Show Templates which Bind to the Group  [GET]
 
 ```
-return render_template('group/templates.html', group=grp, ts=ts, 
+return render_template('group/templates.html', group=grp, ts=ts,
                         uic_address=UIC_ADDRESS['external'], config=config)
 ```
 
@@ -2901,7 +3571,7 @@ return render_template('host/templates.html', config=config, **locals())
 
 ### Add a Host to a Group [POST]
 
-Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[group_id]=1&data[hosts]=host1`. 
+Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[group_id]=1&data[hosts]=host1`.
 
 + Request (application/x-www-form-urlencoded)
 
@@ -2918,7 +3588,7 @@ Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[group_id]=1&d
 
 ### Set maintain period of a Host [POST]
 
-Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[begin]=1456666666&data[end]=1456667777&data[host_ids]=1`. 
+Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[begin]=1456666666&data[end]=1456667777&data[host_ids]=1`.
 
 + Request (application/x-www-form-urlencoded)
 
@@ -2985,7 +3655,7 @@ Do not forget to escape `[` with `%5B` and `]` with `%5D` in `data[host_ids]=11`
 
 Update a strategy and set alerting rule of a template.
 Strategies are contents of a template. Each template may have some strategies.
-Do not forget to escape `[` with `%5B` and `]` with `%5D` in 
+Do not forget to escape `[` with `%5B` and `]` with `%5D` in
 `data[sid]=&data[metric]=cpu.idle&data[tags]=&data[max_step]=3&data[priority]=0&data[note]=&data[func]=all(#3)&data[op]=<=&data[right_value]=40&data[run_begin]=&data[run_end]=&data[tpl_id]=41`.
 After "/strategy/update" API is called, "falcon_portal.strategy" table is inserted a new record:
 ```
@@ -3018,8 +3688,8 @@ mysql> select * from strategy where tpl_id=41;
 
 ### Add an Action to Template [POST]
 
-Action binds user groups to a template. Each template has only one action. 
-Do not forget to escape `[` with `%5B` and `]` with `%5D` in 
+Action binds user groups to a template. Each template has only one action.
+Do not forget to escape `[` with `%5B` and `]` with `%5D` in
 `data[uic]=team_api&data[url]=&data[callback]=0&data[before_callback_sms]=0&data[before_callback_mail]=0&data[after_callback_sms]=0&data[after_callback_mail]=0`.
 After "/template/action/update/{tpl_id}" API is called, "falcon_portal.action" table is inserted a new record:
 ```
@@ -3295,37 +3965,36 @@ Query lastest value of multiple endpoint-counter sets.
 ## /version
 ## /workdir
 
- 
+
 # Group Sender
 ## /config/reload
-### GET；POST
+### GET [GET]
 Only works if IP is "127.0.0.1", otherwise returns "no privilege".
 
 ## /count
-### GET；POST
-Get the statistics of SMS, Mail, and QQ.
-+ Response 200 (text/plain)
-    + Body    
-        sms:0, mail:0, qq:0
-## /health
-### GET；POST
-Returned `ok` if the component works as usual.
-+ Response 200 (text/plain)
-    + Body    
-        ok
-## /version
-### GET；POST
-Get the version number of the component.
+### Get the statistics of SMS, Mail, and QQ [GET]
 
 + Response 200 (text/plain)
-    + Body    
+    + Body
+        sms:0, mail:0, qq:0
+## /health
+### GET [GET]
+Returned `ok` if the component works as usual.
++ Response 200 (text/plain)
+    + Body
+        ok
+## /version
+### Get the version number of the component [GET]
+
++ Response 200 (text/plain)
+    + Body
         0.0.1
 
 ## /workdir
-### GET；POST
-Get the work directory of the component
+### Get the work directory of the component [GET]
+
 + Response 200 (application/json)
-    + Body    
+    + Body
         {
             "msg": "success",
             "data": "/home/sender"
@@ -3381,7 +4050,7 @@ Get the work directory of the component
 
 ### Delete Index Data [GET]
 
-Delete data of endpoints which had been created a week ago from "endpoint", "endpoint_counter", 
+Delete data of endpoints which had been created a week ago from "endpoint", "endpoint_counter",
 and "tag_endpoint" tables.
 
 + Response 200 (application/json)
@@ -3454,7 +4123,7 @@ Same with "Counter All". This API will be deprecated.
 Push the counter to Transfer.
 
 ```
-    Payload 
+    Payload
     [
         {
             "endpoint": "bgp-bj-058-083-161-105",
